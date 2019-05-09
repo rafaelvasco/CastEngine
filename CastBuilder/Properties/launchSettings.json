@@ -1,0 +1,8 @@
+{
+  "profiles": {
+    "CastBuilder": {
+      "commandName": "Project",
+      "commandLineArgs": "Build E:\\Dev\\CastEngine\\CastDemo\\"
+    }
+  }
+}

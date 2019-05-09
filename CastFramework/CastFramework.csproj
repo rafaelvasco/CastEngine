@@ -1,0 +1,24 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netstandard2.1</TargetFramework>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+    <LangVersion>7.3</LangVersion>
+    <Description>2D Game Framework</Description>
+    <Copyright>Rafael Vasco</Copyright>
+    <Authors>Rafael Vasco</Authors>
+    <Company>RV</Company>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <EmbeddedResource Include="Content\ShaderBuilder\shaderc.exe" />
+    <EmbeddedResource Include="Content\ShaderBuilder\shader_includes\bgfx_shader.sh" />
+    <EmbeddedResource Include="Content\ShaderBuilder\shader_includes\common.sh" />
+    <EmbeddedResource Include="Content\ShaderBuilder\shader_includes\shaderlib.sh" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="System.Runtime.CompilerServices.Unsafe" Version="4.5.2" />
+  </ItemGroup>
+
+</Project>

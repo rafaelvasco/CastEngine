@@ -1,0 +1,44 @@
+{
+  "Content": {
+    "Base": {
+      "Name": "Base",
+      "Images": {
+        "logo": {
+          "Id": "logo",
+          "Path": "Images/logo.png"
+        }
+      },
+
+      "Fonts": {
+        "default_font": {
+          "Id": "default_font",
+          "Path": "Fonts/default_font.fnt",
+          "ImagePath": "Fonts/default_font.png"
+        },
+        "default_font2": {
+          "Id": "default_font2",
+          "Path": "Fonts/default_font2.fnt",
+          "ImagePath": "Fonts/default_font2.png"
+        }
+      },
+      "Shaders": {
+        "base_2d": {
+          "Id": "base_2d",
+          "VertexSrcPath": "Shaders/base_2d.vs",
+          "FragmentSrcPath": "Shaders/base_2d.fs"
+        }
+      },
+      "Effects": {},
+      "Songs":  {},
+      "TextFiles": {
+        "gamecontrollerdb": {
+          "Id": "gamecontrollerdb",
+          "Path": "TextFiles/gamecontrollerdb.txt"
+        }
+      }
+      
+    }
+  }
+}
+
+
