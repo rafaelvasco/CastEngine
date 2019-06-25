@@ -1,0 +1,10 @@
+{
+  "title": "Cast Editor",
+  "frame_rate": 60,
+  "canvas_width": 1024,
+  "canvas_height": 768,
+  "fullscreen": false,
+  "preload_paks": [
+    
+  ] 
+}

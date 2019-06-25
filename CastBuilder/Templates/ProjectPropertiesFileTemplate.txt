@@ -1,0 +1,10 @@
+﻿{
+  "title": "#1",
+  "frame_rate": 60,
+  "canvas_width": 480,
+  "canvas_height": 360,
+  "fullscreen": false,
+  "preload_paks": [
+    
+  ] 
+}

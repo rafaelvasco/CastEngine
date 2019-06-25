@@ -21,7 +21,7 @@ namespace CastFramework
 
         private static int mouse_wheel;
 
-        internal static Point mouse_position;
+        internal static Point mouse_position = new Point(-1, -1);
 
         private static GamePlatform platform;
 

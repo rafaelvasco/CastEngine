@@ -343,16 +343,16 @@ namespace CastFramework
         }
 
 
-        public static implicit operator Color(int rgba)
+        public static implicit operator Color(uint rgba)
         {
             uint abgr = ((uint)((byte)(rgba & 0x000000FF)) << 24) | ((uint)((byte)((rgba & 0x0000FF00) >> 8)) << 16) | ((uint)((byte)((rgba & 0x00FF0000) >> 16)) << 8) | ((uint)((byte)((rgba & 0xFF000000) >> 24)));
 
             return new Color(abgr);
         }
 
-        public static implicit operator int(Color color)
+        public static implicit operator uint(Color color)
         {
-            return color.RGBA;
+            return color.ABGR;
         }
 
         public void Deconstruct(out float r, out float g, out float b)

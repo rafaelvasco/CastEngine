@@ -1,7 +1,7 @@
-{
+﻿{
   "Content": {
-    "Base": {
-      "Name": "Base",
+    "Main": {
+      "Name": "Main",
       "Images": {
         "cast_logo": {
           "Path": "Images/cast_logo.png",

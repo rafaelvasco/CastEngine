@@ -1,11 +1,12 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Runtime;
+using System.Runtime.CompilerServices;
 using System.Runtime.Serialization;
 using System.Text;
 using System.Threading;
-using Utf8Json;
 
 namespace CastFramework
 {
@@ -166,6 +167,7 @@ namespace CastFramework
 
         private bool initialized;
 
+        private List<GameComponent> game_components;
 
         /* ========================================================================================================== */
 
@@ -306,9 +308,19 @@ namespace CastFramework
 
             CurrentScene.Update(game_time);
 
+            if (game_components != null)
+            {
+                UpdateComponents(game_time);
+            }
+
             Canvas.BeginRendering();
 
             CurrentScene.Draw(Canvas, game_time);
+
+            if(game_components != null)
+            {
+                DrawComponents(Canvas);
+            }
 
             Canvas.EndRendering();
 
@@ -336,6 +348,36 @@ namespace CastFramework
         public void ToggleFullscreen()
         {
             Fullscreen = !Fullscreen;
+        }
+
+        public void AddComponent(GameComponent component)
+        {
+            if(this.game_components == null)
+            {
+                this.game_components = new List<GameComponent>();
+            }
+
+            this.game_components.Add(component);
+        }
+
+        public void GoToScene(Scene scene)
+        {
+            
+            CurrentScene.End();
+
+            if(!CurrentScene.KeepContentOnMemory)
+            {
+                CurrentScene.Unload();
+            }
+
+            CurrentScene = scene;
+
+            CurrentScene.Load();
+
+            CurrentScene.Init();
+
+            CurrentScene.Update(game_time);
+
         }
 
         internal void ThrowError(string message, params object[] args)
@@ -368,9 +410,7 @@ namespace CastFramework
 
             try
             {
-                var bytes = File.ReadAllBytes("config.json");
-
-                props = JsonSerializer.Deserialize<GameProperties>(bytes);
+                props = JsonIO.Load<GameProperties>("config.json");
 
                 if (props.Title == null)
                 {
@@ -417,6 +457,25 @@ namespace CastFramework
         private void OnPlatformQuit()
         {
             Quit();
+        }
+
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        private void UpdateComponents(GameTime time)
+        {
+            for(var i = 0; i < game_components.Count; i++)
+            {
+                game_components[i].Update(time);
+            }
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        private void DrawComponents(Canvas canvas)
+        {
+            for (var i = 0; i < game_components.Count; i++)
+            {
+                game_components[i].Draw(canvas);
+            }
         }
 
         private void Tick()
@@ -468,6 +527,11 @@ namespace CastFramework
 
                         CurrentScene.Update(game_time);
 
+                        if(game_components != null)
+                        {
+                            UpdateComponents(game_time);
+                        }
+
                         Input.PostUpdate();
 
                     }
@@ -505,12 +569,22 @@ namespace CastFramework
 
                     CurrentScene.Update(game_time);
 
+                    if(game_components != null)
+                    {
+                        UpdateComponents(game_time);
+                    }
+
                     Input.PostUpdate();
                 }
 
                 Canvas.BeginRendering();
 
                 CurrentScene.Draw(Canvas, game_time);
+
+                if(game_components != null)
+                {
+                    DrawComponents(Canvas);
+                }
 
                 Canvas.EndRendering();
 

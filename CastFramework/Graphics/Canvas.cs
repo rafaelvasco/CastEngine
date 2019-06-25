@@ -1,6 +1,4 @@
-﻿using System;
-using System.Numerics;
-using System.Runtime.CompilerServices;
+﻿using System.Numerics;
 
 namespace CastFramework
 {
@@ -114,92 +112,55 @@ namespace CastFramework
             pipeline.PushQuad(texture, ref quad);
         }
 
-        /*public void DrawRect(float x, float y, float w, float h, Color color)
+        public void DrawRect(float x, float y, float w, float h, Color color, float line_size = 1)
         {
-            if (vertex_index >= vertex_max_count ||
-                current_texture != prim_texture || current_blend_mode != BlendMode.AlphaBlend)
-            {
-                RenderBatch();
+          
+            ref Quad q = ref primitives_buffer[0];
 
-                if (current_blend_mode != BlendMode.AlphaBlend)
-                {
-                    SetBlendMode(BlendMode.AlphaBlend);
-                }
+            uint col = color.ABGR;
 
-                current_texture = prim_texture;
-            }
+            q.V0 = new Vertex2D(x, y, 0, 0, col);
+            q.V1 = new Vertex2D(x + w, y, 0, 0, col);
+            q.V2 = new Vertex2D(x + w, y + line_size, 0, 0, col);
+            q.V3 = new Vertex2D(x, y + line_size, 0, 0, col);
 
-            var vidx = vertex_index;
+            q = ref primitives_buffer[1];
 
-            var col = color.ABGR;
+            q.V0 = new Vertex2D(x, y + h - line_size, 0, 0, col);
+            q.V1 = new Vertex2D(x + w, y + h - line_size, 0, 0, col);
+            q.V2 = new Vertex2D(x + w, y + h, 0, 0, col);
+            q.V3 = new Vertex2D(x, y + h, 0, 0, col);
 
-            fixed (Vertex2D* vertex_ptr = vertex_array)
-            {
-                // Top Edge
+            q = ref primitives_buffer[2];
 
-                *(vertex_ptr + vidx++) = new Vertex2D(x, y, 0, 0, col);
-                *(vertex_ptr + vidx++) = new Vertex2D(x + w, y, 0, 0, col);
-                *(vertex_ptr + vidx++) = new Vertex2D(x + w, y + 1, 0, 0, col);
-                *(vertex_ptr + vidx++) = new Vertex2D(x, y + 1, 0, 0, col);
+            q.V0 = new Vertex2D(x, y, 0, 0, col);
+            q.V1 = new Vertex2D(x + line_size, y, 0, 0, col);
+            q.V2 = new Vertex2D(x + line_size, y + h, 0, 0, col);
+            q.V3 = new Vertex2D(x, y + h, 0, 0, col);
 
-                // Bottom Edge
-                *(vertex_ptr + vidx++) = new Vertex2D(x, y + h - 1, 0, 0, col);
-                *(vertex_ptr + vidx++) = new Vertex2D(x + w, y + h - 1, 0, 0, col);
-                *(vertex_ptr + vidx++) = new Vertex2D(x + w, y + h, 0, 0, col);
-                *(vertex_ptr + vidx++) = new Vertex2D(x, y + h, 0, 0, col);
+            q = ref primitives_buffer[3];
 
-                // Left Edge
-                *(vertex_ptr + vidx++) = new Vertex2D(x, y, 0, 0, col);
-                *(vertex_ptr + vidx++) = new Vertex2D(x + 1, y, 0, 0, col);
-                *(vertex_ptr + vidx++) = new Vertex2D(x + 1, y + h, 0, 0, col);
-                *(vertex_ptr + vidx++) = new Vertex2D(x, y + h, 0, 0, col);
+            q.V0 = new Vertex2D(x + w - line_size, y, 0, 0, col);
+            q.V1 = new Vertex2D(x + w, y, 0, 0, col);
+            q.V2 = new Vertex2D(x + w, y + h, 0, 0, col);
+            q.V3 = new Vertex2D(x + w - line_size, y + h, 0, 0, col);
+           
+            pipeline.PushQuads(prim_texture, primitives_buffer, 4);
+        }
 
-                // Right Edge
-                *(vertex_ptr + vidx++) = new Vertex2D(x + w - 1, y, 0, 0, col);
-                *(vertex_ptr + vidx++) = new Vertex2D(x + w, y, 0, 0, col);
-                *(vertex_ptr + vidx++) = new Vertex2D(x + w, y + h, 0, 0, col);
-                *(vertex_ptr + vidx) = new Vertex2D(x + w - 1, y + h, 0, 0, col);
-            }
-
-            unchecked
-            {
-                vertex_index += 16;
-            }
-        }*/
-
-        /*public void FillRect(float x, float y, float w, float h, Color color)
+        public void FillRect(float x, float y, float w, float h, Color color)
         {
-            if (vertex_index >= vertex_max_count ||
-                current_texture != prim_texture || current_blend_mode != BlendMode.AlphaBlend)
-            {
-                RenderBatch();
+            ref Quad q = ref primitives_buffer[0];
 
-                if (current_blend_mode != BlendMode.AlphaBlend)
-                {
-                    SetBlendMode(BlendMode.AlphaBlend);
-                }
+            uint col = color.ABGR;
 
-                current_texture = prim_texture;
-            }
+            q.V0 = new Vertex2D(x, y, 0, 0, col);
+            q.V1 = new Vertex2D(x + w, y, 0, 0, col);
+            q.V2 = new Vertex2D(x + w, y + h, 0, 0, col);
+            q.V3 = new Vertex2D(x, y + h, 0, 0, col);
 
-
-            var vidx = vertex_index;
-
-            var col = color.ABGR;
-
-            fixed (Vertex2D* vertex_ptr = vertex_array)
-            {
-                *(vertex_ptr + vidx++) = new Vertex2D(x, y, 0, 0, col);
-                *(vertex_ptr + vidx++) = new Vertex2D(x + w, y, 0, 0, col);
-                *(vertex_ptr + vidx++) = new Vertex2D(x + w, y + h, 0, 0, col);
-                *(vertex_ptr + vidx) = new Vertex2D(x, y + h, 0, 0, col);
-            }
-
-            unchecked
-            {
-                vertex_index += 4;
-            }
-        }*/
+            pipeline.PushQuads(prim_texture, primitives_buffer, 1);
+        }
 
         public void DrawText(float x, float y, string text, Color color, float scale = 1.0f)
         {
@@ -243,9 +204,9 @@ namespace CastFramework
             gfx.TakeScreenShot(path);
         }
 
-        public void AddSurface(Rect area)
+        public RenderSurface AddSurface(Rect area, string name = "Surface")
         {
-            pipeline.AddSurface(area);
+           return pipeline.AddSurface(area, name);
         }
 
         internal void OnScreenResized(int width, int height)
@@ -337,8 +298,6 @@ namespace CastFramework
 
                     render_area = Rect.FromBox(0, 0, width, height);
 
-                    Console.WriteLine($"Stretch Resize: {width}, {height}");
-
                     pipeline.ResizeSurfaces(width, height);
 
                     this.Width = width;
@@ -347,10 +306,7 @@ namespace CastFramework
                     break;
             }
 
-            Console.WriteLine(
-                $"Render Area: {render_area.X1.ToString()}, {render_area.Y1.ToString()}, {render_area.Width.ToString()}, {render_area.Height.ToString()}");
-
-            screen_proj_matrix = Matrix4x4.CreateOrthographicOffCenter(
+            var screen_proj_matrix = Matrix4x4.CreateOrthographicOffCenter(
                 0,
                 width,
                 height,
@@ -358,6 +314,8 @@ namespace CastFramework
                 0.0f,
                 1.0f
             );
+
+            pipeline.SetScreenProjection(screen_proj_matrix);
 
             pipeline.SetSurfaceAreas(render_area);
         }
@@ -385,11 +343,11 @@ namespace CastFramework
 
         private readonly int vertex_max_count;
 
-        private Matrix4x4 screen_proj_matrix;
-
         private float render_scale_x = 1.0f;
 
         private float render_scale_y = 1.0f;
+
+        private Quad[] primitives_buffer = new Quad[16];
 
     }
 }

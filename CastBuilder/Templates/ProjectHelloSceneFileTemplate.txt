@@ -1,8 +1,8 @@
 ﻿using CastFramework;
 
-namespace CastDemo
+namespace #1
 {
-    public class HelloWorld : Scene
+    public class HelloScene : Scene
     {
         private Texture2D texture;
         private Sprite sprite;
@@ -34,8 +34,6 @@ namespace CastDemo
         public override void Draw(Canvas canvas, GameTime gameTime)
         {
             sprite.Draw(canvas, Canvas.Width/2, Canvas.Height/2);
-
-            canvas.DrawRect(100, 100, 100, 100, Color.Red, line_size: 2);
         }
     }
 }

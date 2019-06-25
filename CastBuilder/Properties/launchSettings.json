@@ -2,7 +2,7 @@
   "profiles": {
     "CastBuilder": {
       "commandName": "Project",
-      "commandLineArgs": "Build E:\\Dev\\CastEngine\\CastDemo\\"
+      "commandLineArgs": "Watch E:\\Dev\\CastEngine\\CastDemo\\"
     }
   }
 }

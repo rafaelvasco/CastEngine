@@ -4,6 +4,9 @@ namespace CastFramework
 {
     public class RenderSurface
     {
+
+        public string Name {get; internal set; }
+
         public RenderTarget RenderTarget => render_target;
         public Vertex2D[] Vertices { get; }
 

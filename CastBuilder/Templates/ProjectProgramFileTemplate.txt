@@ -1,6 +1,6 @@
 ﻿using CastFramework;
 
-namespace CastDemo
+namespace #1
 {
     class Program
     {
@@ -8,7 +8,7 @@ namespace CastDemo
         {
             using (var game = new Game())
             {
-                game.Start(new GuiDemo());
+                game.Start(new HelloScene());
             }
         }
     }

@@ -96,14 +96,14 @@ namespace CastFramework
             }
             else
             {
-                surface = main_render_surface;
+                surface = render_surfaces[0];
                 current_render_pass = 0;
             }
 
             Matrix4x4 projection = surface.Projection;
 
             gfx.SetRenderTarget(current_render_pass, surface.RenderTarget);
-            gfx.SetClearColor(current_render_pass, surface != main_render_surface ? 0x00000000 : 0x000000FF);
+            gfx.SetClearColor(current_render_pass, surface != render_surfaces[0] ? Color.Transparent : Color.Black);
             gfx.SetViewport(current_render_pass, 0, 0, surface.Width, surface.Height);
             gfx.SetProjection(current_render_pass, &projection.M11);
         }
@@ -121,11 +121,13 @@ namespace CastFramework
 
             gfx.SetViewport(pass, 0, 0, Game.Instance.ScreenSize.W, Game.Instance.ScreenSize.H);
 
-            var proj = surface.Projection;
+            var proj = screen_projection;
 
             gfx.SetProjection(pass, &proj.M11);
 
-            Bgfx.SetTexture(0, current_shader_program.Samplers[0], surface.RenderTarget.NativeTexture, current_texture.TexFlags);
+            //gfx.SetClearColor(pass, Color.Blue);
+
+            Bgfx.SetTexture(0, current_shader_program.Samplers[0], surface.RenderTarget.NativeTexture, TextureFlags.FilterPoint | TextureFlags.ClampUVW);
 
             Bgfx.SetRenderState(render_state);
 

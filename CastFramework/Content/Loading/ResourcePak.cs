@@ -19,7 +19,7 @@ namespace CastFramework
 
         public void SaveToDisk(string content_path)
         {
-            var bytes = BinarySerializer.Serialize(this);
+            var bytes = BinaryIO.Serialize(this);
             File.WriteAllBytes(Path.Combine(content_path, this.Name + ".pak"), bytes);
         }
     }

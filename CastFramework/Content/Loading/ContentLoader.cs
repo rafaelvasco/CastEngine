@@ -16,7 +16,7 @@ namespace CastFramework
         {
             var bytes = File.ReadAllBytes(path);
 
-            var obj = BinarySerializer.Deserialize<T>(bytes);
+            var obj = BinaryIO.Deserialize<T>(bytes);
 
             return obj;
         }

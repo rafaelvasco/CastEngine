@@ -1,36 +1,15 @@
 ﻿using System;
+using System.Numerics;
 
 namespace CastFramework
 {
     public partial class RenderPipeline : IDisposable
     {
-        private RenderSurface main_render_surface;
-
-        private RenderSurface[] overlay_surfaces;
-
-        private int overlay_surface_idx;
-
-        private Vertex2D[] vertices;
-
-        private ushort[] indices;
-
-        private int vertex_index;
-
-        private int max_vertex_count;
-        
-        private Texture2D current_texture;
-
-        private BlendMode current_blend_mode;
-
-        private ShaderProgram current_shader_program;
-
-        private GraphicsContext gfx;
-
         public RenderPipeline(GraphicsContext gfx, int max_vertex_count, Rect render_area)
         {
-            this.overlay_surfaces = new RenderSurface[5];
+            this.render_surfaces = new RenderSurface[5];
 
-            this.main_render_surface = new RenderSurface(render_area);
+            AddSurface(render_area, "MainSurface");
 
             this.max_vertex_count = max_vertex_count;
 
@@ -105,40 +84,83 @@ namespace CastFramework
             ImplSetScissor(x, y, w, h);
         }
 
-        public void AddSurface(Rect area)
+        public RenderSurface AddSurface(Rect area, string name = "Surface")
         {
             var surface = new RenderSurface(area);
+            surface.Name = name;
 
-            overlay_surfaces[overlay_surface_idx++] = surface;
+            render_surfaces[overlay_surface_idx++] = surface;
+
+            return surface;
         }
 
         public unsafe void DrawSurfaces()
         {
-            ImplDrawSurface(main_render_surface, 0);
-
             for(var i = 0; i < overlay_surface_idx; ++i)
             {
-                ImplDrawSurface(overlay_surfaces[i], i+1);
+                ImplDrawSurface(render_surfaces[i], i+1);
             }
         }
 
         public void ResizeSurfaces(int width, int height)
         {
-            main_render_surface.ResizeSurface(width, height);
-
             for (var i = 0; i < overlay_surface_idx; ++i)
             {
-                overlay_surfaces[i].ResizeSurface(width, height);
+                render_surfaces[i].ResizeSurface(width, height);
             }
         }
 
         public void SetSurfaceAreas(Rect area)
         {
-            main_render_surface.SetArea(area);
-
             for (var i = 0; i < overlay_surface_idx; ++i)
             {
-                overlay_surfaces[i].SetArea(area);
+                render_surfaces[i].SetArea(area);
+            }
+        }
+
+        public void SetScreenProjection(Matrix4x4 mat)
+        {
+            this.screen_projection = mat;
+        }
+
+        public unsafe void PushQuads(Texture2D texture, Quad[] quads, int length)
+        {
+            if (vertex_index >= max_vertex_count ||
+                current_texture != texture || current_blend_mode != quads[0].Blend)
+            {
+                Submit();
+
+                if (current_blend_mode != quads[0].Blend)
+                {
+                    SetBlendMode(quads[0].Blend);
+                }
+
+                current_texture = texture;
+            }
+
+            var vidx = vertex_index;
+
+            for(var i = 0; i < length; ++i)
+            {
+                var qv = quads[i];
+
+                ref var v0 = ref qv.V0;
+                ref var v1 = ref qv.V1;
+                ref var v2 = ref qv.V2;
+                ref var v3 = ref qv.V3;
+
+                fixed (Vertex2D* vertex_ptr = vertices)
+                {
+                    *(vertex_ptr + vidx++) = new Vertex2D(v0.X, v0.Y, v0.Tx, v0.Ty, v0.Col);
+                    *(vertex_ptr + vidx++) = new Vertex2D(v1.X, v1.Y, v1.Tx, v1.Ty, v1.Col);
+                    *(vertex_ptr + vidx++) = new Vertex2D(v2.X, v2.Y, v2.Tx, v2.Ty, v2.Col);
+                    *(vertex_ptr + vidx++) = new Vertex2D(v3.X, v3.Y, v3.Tx, v3.Ty, v3.Col);
+                }
+            }
+
+            unchecked
+            {
+                vertex_index += length * 4;
             }
         }
 
@@ -195,5 +217,30 @@ namespace CastFramework
         {
             ImplDispose();
         }
+
+        //private RenderSurface main_render_surface;
+
+        private RenderSurface[] render_surfaces;
+
+        private int overlay_surface_idx;
+
+        private Vertex2D[] vertices;
+
+        private ushort[] indices;
+
+        private int vertex_index;
+
+        private int max_vertex_count;
+
+        private Texture2D current_texture;
+
+        private BlendMode current_blend_mode;
+
+        private ShaderProgram current_shader_program;
+
+        private GraphicsContext gfx;
+
+        private Matrix4x4 screen_projection;
+
     }
 }

@@ -25,10 +25,7 @@ namespace CastBuilder
                 throw new Exception("Invalid Project : Missing content.json");
             }
 
-            using (var stream = File.OpenRead(manifest_path))
-            {
-                manifest = Utf8Json.JsonSerializer.Deserialize<ContentManifest>(stream);
-            }
+            manifest = JsonIO.Load<ContentManifest>(manifest_path);
 
             var root_path = Path.GetDirectoryName(manifest_path);
 

@@ -4,7 +4,7 @@ using System.Runtime.Serialization.Formatters.Binary;
 
 namespace CastFramework
 {
-    public static class BinarySerializer
+    public static class BinaryIO
     {
         public static byte[] Serialize(object obj)
         {

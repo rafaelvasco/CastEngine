@@ -24,5 +24,11 @@ namespace CastBuilder
         {
             return new Uri(Path.Combine(path1, path2, path3, path4)).LocalPath;
         }
+
+        public static string GetLocalNormalizedRelativePath(string relativeTo, string path)
+        {
+            return Path.GetRelativePath(relativeTo, path).Replace("\\", "/");
+        }
+
     }
 }

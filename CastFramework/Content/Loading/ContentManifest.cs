@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Runtime.Serialization;
+using System.IO;
+using Utf8Json;
 
 namespace CastFramework
 {
@@ -64,6 +65,7 @@ namespace CastFramework
     public class ContentManifest
     {
         public Dictionary<string, ContentGroup> Content;
-      
     }
+
+    
 }

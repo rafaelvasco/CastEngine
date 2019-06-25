@@ -1,14 +1,14 @@
 ﻿using CastFramework;
 
-namespace CastDemo
+namespace CastEditor
 {
     class Program
     {
         static void Main()
         {
-            using (var game = new Game())
+            using (var app = new Game())
             {
-                game.Start(new GuiDemo());
+                app.Start(new Editor());
             }
         }
     }

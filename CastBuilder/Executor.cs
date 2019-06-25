@@ -7,10 +7,12 @@ namespace CastBuilder
     {
         private static void PrintUsage()
         {
-            Console.WriteLine("Usage: CastBuilder [action] [params]");
-            Console.WriteLine("Actions:");
-            Console.WriteLine(" [1] Build");
-            Console.WriteLine(" ------> [params]: Project Root Path");
+            ConsoleUtils.ShowInfo("Usage: CastBuilder [action] [params]");
+            ConsoleUtils.ShowInfo("Examples:");
+            ConsoleUtils.ShowInfo(" ");
+            ConsoleUtils.ShowInfo("   [1] Build (Project Root Path)");
+            ConsoleUtils.ShowInfo("   [2] Watch (Project Root Path)");
+            ConsoleUtils.ShowInfo("   [3] Create (Project Root Path) (Project Name)");
         }
 
         public static void ExecArgs(string[] args)
@@ -21,26 +23,40 @@ namespace CastBuilder
                 return;
             }
 
-            var action = args[0];
+            var action = args[0].ToLower();
             var root_path = args[1];
 
             switch (action)
             {
-                case "Build":
+                case "build":
 
                     ExecBuild(root_path);
 
                     break;
 
-                case "Watch": 
+                case "watch": 
 
                     ExecWatch(root_path);
 
                     break;
 
+                case "create":
+
+                    if(args.Length < 3)
+                    {
+                        PrintUsage();
+                        return;
+                    }
+
+                    var proj_name = args[2];
+
+                    ExecCreate(root_path, proj_name);
+
+                    break;
+
                 default:
 
-                    Console.WriteLine($"Invalid Action: {action}");
+                    ConsoleUtils.ShowError($"Invalid Action: {action}");
                     break;
             }
         }
@@ -52,16 +68,16 @@ namespace CastBuilder
                 try
                 {
                     ContentBuilder.Build(project_root_path);
-                    Console.WriteLine("Project Built Successfully.");
+                    ConsoleUtils.ShowSuccess("Project Built Successfully.");
                 }
                 catch(Exception e)
                 {
-                    Console.WriteLine($"An error ocurred: {e.Message} :: {e.StackTrace}");
+                    ConsoleUtils.ShowError($"An error ocurred: {e.Message} :: {e.StackTrace}");
                 }
             }
             else
             {
-                Console.WriteLine($"Invalid Path: {project_root_path}");
+                ConsoleUtils.ShowError($"Invalid Path: {project_root_path}");
             }
         }
         
@@ -71,16 +87,29 @@ namespace CastBuilder
             {
                 try
                 {
-                    ContentReloader.Watch(project_root_path);
+                    ContentWatcher.Watch(project_root_path);
                 }
                 catch (Exception e)
                 {
-                    Console.WriteLine($"An error ocurred: {e.Message} :: {e.StackTrace}");
+                    ConsoleUtils.ShowError($"An error ocurred: {e.Message} :: {e.StackTrace}");
                 }
             }
             else
             {
-                Console.WriteLine($"Invalid Path: {project_root_path}");
+                ConsoleUtils.ShowError($"Invalid Path: {project_root_path}");
+            }
+        }
+        
+        private static void ExecCreate(string project_root_path, string proj_name)
+        {
+            try
+            {
+                ProjectCreator.Create(project_root_path, proj_name);
+                ConsoleUtils.ShowSuccess($"Project {proj_name} created successfuly on {project_root_path}");
+            }
+            catch (Exception e)
+            {
+                ConsoleUtils.ShowError($"An error ocurred: {e.Message} :: {e.StackTrace}");
             }
         }
     }
